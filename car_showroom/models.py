@@ -16,10 +16,16 @@ class SaleHistory(models.Model):
     customer = models.ForeignKey(Customer)
     time_stamp = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.car
+
 
 class UniqueCustomer(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     purchase_amount = models.IntegerField()
+
+    def __str__(self):
+        return self.customer
 
 
 class CarShowroom(models.Model):
@@ -40,3 +46,6 @@ class Discount(models.Model):
     discount = models.IntegerField()
     car = models.ForeignKey(ShowroomCars, on_delete=models.CASCADE)
     showroom = models.ForeignKey(CarShowroom, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.start_date
