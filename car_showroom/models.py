@@ -3,7 +3,14 @@ from customers.models import Customer
 from django.db import models
 
 
-class ShowroomCars(models.Model):
+class BaseModel(models.Model):
+    is_active = models.BooleanField()
+
+    class Meta:
+        abstract = True
+
+
+class ShowroomCars(BaseModel):
     car = models.ForeignKey(Car)
     price = models.FloatField()
 
@@ -11,7 +18,7 @@ class ShowroomCars(models.Model):
         return self.name
 
 
-class SaleHistory(models.Model):
+class SaleHistory(BaseModel):
     car = models.ForeignKey()
     customer = models.ForeignKey(Customer)
     time_stamp = models.DateTimeField(auto_now_add=True)
@@ -20,7 +27,7 @@ class SaleHistory(models.Model):
         return self.car
 
 
-class UniqueCustomer(models.Model):
+class UniqueCustomer(BaseModel):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     purchase_amount = models.IntegerField()
 
@@ -28,7 +35,7 @@ class UniqueCustomer(models.Model):
         return self.customer
 
 
-class CarShowroom(models.Model):
+class CarShowroom(BaseModel):
     name = models.CharField(max_length=200)
     address = models.CharField(max_length=200)
     preferred_characteristics = models.JSONField()
@@ -40,7 +47,7 @@ class CarShowroom(models.Model):
         return self.name
 
 
-class Discount(models.Model):
+class Discount(BaseModel):
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField()
     discount = models.IntegerField()

@@ -1,7 +1,9 @@
 from django.db import models
 
+from car_showroom.models import BaseModel
 
-class Car(models.Model):
+
+class Car(BaseModel):
     car_name = models.CharField(max_length=200)
     year = models.DateField()
     gearbox = models.CharField(max_length=200)
@@ -12,7 +14,7 @@ class Car(models.Model):
         return self.car_name
 
 
-class Dealer(models.Model):
+class Dealer(BaseModel):
     name = models.CharField(max_length=200)
     year = models.DateField()
     customers_amount = models.IntegerField()
@@ -21,7 +23,7 @@ class Dealer(models.Model):
         return self.name
 
 
-class CarForSale(models.Model):
+class CarForSale(BaseModel):
     car = models.ForeignKey(Car, on_delete=models.CASCADE)
     dealer = models.ForeignKey(Dealer, on_delete=models.CASCADE)
     price = models.FloatField()
@@ -30,7 +32,7 @@ class CarForSale(models.Model):
         return self.car
 
 
-class Discount(models.Model):
+class Discount(BaseModel):
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField()
     discount = models.IntegerField()

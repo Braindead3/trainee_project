@@ -1,9 +1,9 @@
 from django.db import models
-from car_showroom.models import ShowroomCars
+from car_showroom.models import ShowroomCars, BaseModel
 from dealer.models import Car
 
 
-class PurchaseHistory(models.Model):
+class PurchaseHistory(BaseModel):
     car = models.ForeignKey(ShowroomCars, on_delete=models.CASCADE)
     time_stamp = models.DateTimeField(auto_now_add=True)
 
@@ -11,7 +11,7 @@ class PurchaseHistory(models.Model):
         return self.car
 
 
-class Customer(models.Model):
+class Customer(BaseModel):
     name = models.CharField(max_length=200)
     address = models.CharField(max_length=200)
     balance = models.FloatField()
@@ -21,7 +21,7 @@ class Customer(models.Model):
         return self.name
 
 
-class Offer(models.Model):
+class Offer(BaseModel):
     car = models.ForeignKey(Car, on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     max_price = models.FloatField()
