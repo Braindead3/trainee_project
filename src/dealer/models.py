@@ -1,19 +1,29 @@
 from django.db import models
-from djmoney.forms import MoneyField
-from core.enums import Gearbox,Colors
-from core.common_models import BaseModel
-from django_countries.fields import CountryField
 from django.db.models import CheckConstraint, Q
-from src.car_showroom.models import CarShowroom
+from django_countries.fields import CountryField
+from djmoney.forms import MoneyField
+
+from core.common_models import BaseModel
 
 
 class Car(BaseModel):
+    class Gearbox(models.TextChoices):
+        Automatic = 'automatic', 'automatic'
+        Manual = 'manual', 'manual'
+
+    class Colors(models.TextChoices):
+        Red = 'red', 'red'
+        Yellow = 'yellow', 'yellow'
+        Blue = 'blue', 'blue'
+        Black = 'black', 'black'
+        White = 'white', 'white'
+
     name = models.CharField(max_length=200)
     year = models.PositiveIntegerField()
-    gearbox = models.CharField(max_length=200, choices=Gearbox)
+    gearbox = models.CharField(max_length=200, choices=Gearbox.choices)
     engine_volume = models.FloatField()
     mileage = models.PositiveIntegerField()
-    color = models.CharField(max_length=200,choices=Colors)
+    color = models.CharField(max_length=200, choices=Colors.choices)
 
     class Meta:
         constraints = (
@@ -29,28 +39,47 @@ class Car(BaseModel):
         return self.name
 
 
-class DealerShowroomSale(models.Model):
-    car = models.ForeignKey('CarForSale', on_delete=models.SET_NULL)
-    sale_date = models.DateTimeField(auto_now_add=True)
-    discount = models.ForeignKey('Discount', on_delete=models.SET_NULL)
-
-
 class Dealer(BaseModel):
     name = models.CharField(max_length=200)
     year = models.PositiveIntegerField()
     customers_amount = models.PositiveIntegerField()
     description = models.TextField()
     country = CountryField()
-    sales = models.ManyToManyField(CarShowroom, through=DealerShowroomSale)
+    sales = models.ManyToManyField('car_showroom.CarShowroom', through='DealerShowroomSale')
 
     def __str__(self):
         return self.name
 
 
 class CarForSale(BaseModel):
-    car = models.ForeignKey(Car, on_delete=models.SET_NULL)
-    dealer = models.ForeignKey(Dealer, on_delete=models.SET_NULL)
+    car = models.ForeignKey(Car, on_delete=models.SET_NULL, null=True)
+    dealer = models.ForeignKey(Dealer, on_delete=models.SET_NULL, null=True)
     price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
 
     def __str__(self):
         return self.car
+
+
+class Discount(BaseModel):
+    start_date = models.DateTimeField(auto_now_add=True)
+    end_date = models.DateTimeField()
+    discount = models.PositiveIntegerField()
+    dealer = models.ForeignKey(Dealer, on_delete=models.SET_NULL, blank=True, null=True)
+
+    class Meta:
+        constraints = (
+            CheckConstraint(
+                check=Q(discount__gte=0) & Q(discount__lte=100),
+                name='discount_in_range_of_0_100'),
+        )
+
+    def __str__(self):
+        return self.start_date
+
+
+class DealerShowroomSale(BaseModel):
+    dealer = models.ForeignKey(Dealer, on_delete=models.SET_NULL, null=True)
+    car_showroom = models.ForeignKey('car_showroom.CarShowroom', on_delete=models.SET_NULL, null=True)
+    car = models.ForeignKey(CarForSale, on_delete=models.SET_NULL, null=True)
+    sale_date = models.DateTimeField(auto_now_add=True)
+    discount = models.ForeignKey(Discount, on_delete=models.SET_NULL, null=True)
