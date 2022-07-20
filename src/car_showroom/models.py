@@ -1,4 +1,4 @@
-from django.core.validators import MinValueValidator
+from django.db.models import CheckConstraint, Q
 from django_countries.fields import CountryField
 from djmoney.models.fields import MoneyField
 from core.common_models import BaseModel
@@ -47,6 +47,13 @@ class Discount(BaseModel):
     end_date = models.DateTimeField()
     discount = models.PositiveIntegerField()
     dealer = models.ForeignKey(Dealer, on_delete=models.SET_NULL, blank=True, null=True)
+
+    class Meta:
+        constraints = (
+            CheckConstraint(
+                check=Q(discount__gte=0) & Q(discount__lte=100),
+                name='discount_in_range_of_0_100'),
+        )
 
     def __str__(self):
         return self.start_date

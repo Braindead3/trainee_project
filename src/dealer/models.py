@@ -1,6 +1,6 @@
 from django.db import models
 from djmoney.forms import MoneyField
-from core.enums import Gearbox
+from core.enums import Gearbox,Colors
 from core.common_models import BaseModel
 from django_countries.fields import CountryField
 from django.db.models import CheckConstraint, Q
@@ -13,13 +13,16 @@ class Car(BaseModel):
     gearbox = models.CharField(max_length=200, choices=Gearbox)
     engine_volume = models.FloatField()
     mileage = models.PositiveIntegerField()
-    color = models.CharField(max_length=200)
+    color = models.CharField(max_length=200,choices=Colors)
 
     class Meta:
         constraints = (
             CheckConstraint(
                 check=Q(engine_volume__gte=0.0),
-                name='car_engine_volume_range'),
+                name='car_engine_volume_gte_0'),
+            CheckConstraint(
+                check=Q(engine_year__gte=1900),
+                name='car_engine_gte_then_1900'),
         )
 
     def __str__(self):
