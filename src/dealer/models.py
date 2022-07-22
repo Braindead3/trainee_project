@@ -31,8 +31,8 @@ class Car(BaseModel):
                 check=Q(engine_volume__gte=0.0),
                 name='car_engine_volume_gte_0'),
             CheckConstraint(
-                check=Q(engine_year__gte=1900),
-                name='car_engine_gte_then_1900'),
+                check=Q(year__gte=1900),
+                name='car_year_gte_then_1900'),
         )
 
     def __str__(self):
