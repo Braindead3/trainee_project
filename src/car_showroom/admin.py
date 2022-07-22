@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import UniqueCustomer, CarShowroom, ShowroomCustomerSale
 
-# Register your models here.
+admin.site.register(UniqueCustomer)
+admin.site.register(CarShowroom)
+admin.site.register(ShowroomCustomerSale)
