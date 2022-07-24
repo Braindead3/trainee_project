@@ -8,6 +8,7 @@ django = "*"
 django-countries = "*"
 django-money = "*"
 psycopg2-binary = "*"
+djangorestframework = "*"
 
 [dev-packages]
 
