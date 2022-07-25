@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import CheckConstraint, Q
 from django_countries.fields import CountryField
-from djmoney.forms import MoneyField
+from djmoney.models.fields import MoneyField
 
 from core.common_models import BaseModel
 
@@ -54,10 +54,10 @@ class Dealer(BaseModel):
 class CarForSale(BaseModel):
     car = models.ForeignKey(Car, on_delete=models.SET_NULL, null=True)
     dealer = models.ForeignKey(Dealer, on_delete=models.SET_NULL, null=True)
-    price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
+    price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD', blank=True, null=True)
 
     def __str__(self):
-        return self.car
+        return self.car.name + ' ' + self.dealer.name
 
 
 class Discount(BaseModel):
@@ -74,7 +74,7 @@ class Discount(BaseModel):
         )
 
     def __str__(self):
-        return self.start_date
+        return self.dealer.name
 
 
 class DealerShowroomSale(BaseModel):
@@ -83,3 +83,7 @@ class DealerShowroomSale(BaseModel):
     car = models.ForeignKey(CarForSale, on_delete=models.SET_NULL, null=True)
     sale_date = models.DateTimeField(auto_now_add=True)
     discount = models.ForeignKey(Discount, on_delete=models.SET_NULL, null=True)
+    price = MoneyField(max_digits=14, decimal_places=2, default=0, default_currency='USD', blank=True, null=True)
+
+    def __str__(self):
+        return self.dealer.name
