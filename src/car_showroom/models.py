@@ -17,7 +17,7 @@ class CarShowroom(BaseModel):
     name = models.CharField(max_length=200)
     country = CountryField(blank_label='(select country)')
     preferred_characteristics = models.JSONField()
-    unique_customers = models.ForeignKey(UniqueCustomer, on_delete=models.SET_NULL, null=True)
+    unique_customers = models.ForeignKey(UniqueCustomer, on_delete=models.SET_NULL, null=True, blank=True)
     sales = models.ManyToManyField('customers.Customer', through='ShowroomCustomerSale')
     balance = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
 
