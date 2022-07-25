@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # side-packages
+    'rest_framework',
     'django_countries',
     'djmoney',
 
