@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'djmoney',
     'drf_yasg',
     'debug_toolbar',
+    'django_filters',
 
     # apps
     'src.car_showroom',
@@ -140,6 +141,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
 }
 
 SIMPLE_JWT = {
@@ -176,5 +180,6 @@ SIMPLE_JWT = {
 
 if DEBUG:
     import socket  # only if you haven't already imported this
+
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["0.0.0.0", "10.0.2.2"]
