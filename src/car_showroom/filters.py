@@ -22,7 +22,7 @@ class UniqueCustomerViewSetFilter(filters.FilterSet):
 
 class ShowroomCustomerSaleViewSetFilter(filters.FilterSet):
     class Meta:
-        model = UniqueCustomer
+        model = ShowroomCustomerSale
         fields = {
             'sale_date': ['lte', 'gte'],
             'price': ['lte', 'gte'],

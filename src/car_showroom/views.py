@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 class CarShowroomViewSet(viewsets.ModelViewSet):
     serializer_class = CarShowroomSerializer
     queryset = CarShowroom.objects.all()
-    permission_classes = (IsAuthenticatedOrReadOnly, )
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     filterset_class = CarShowroomViewSetFilter
 
     def get_queryset(self):
@@ -32,7 +32,7 @@ class CarShowroomViewSet(viewsets.ModelViewSet):
 class UniqueCustomerViewSet(viewsets.ModelViewSet):
     serializer_class = UniqueCustomerSerializer
     queryset = UniqueCustomer.objects.all()
-    permission_classes = (IsAuthenticatedOrReadOnly, )
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     filterset_class = UniqueCustomerViewSetFilter
 
     def get_queryset(self):
@@ -45,7 +45,7 @@ class UniqueCustomerViewSet(viewsets.ModelViewSet):
 class ShowroomCustomerSaleViewSet(viewsets.ModelViewSet):
     serializer_class = ShowroomCustomerSaleSerializer
     queryset = ShowroomCustomerSale.objects.all()
-    permission_classes = (IsAuthenticatedOrReadOnly, )
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     filterset_class = ShowroomCustomerSaleViewSetFilter
 
     def get_queryset(self):
