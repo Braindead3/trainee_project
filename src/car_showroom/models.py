@@ -10,7 +10,7 @@ class UniqueCustomer(BaseModel):
     purchase_amount = models.PositiveIntegerField()
 
     def __str__(self):
-        return self.customer
+        return self.customer.name
 
 
 class CarShowroom(BaseModel):

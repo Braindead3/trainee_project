@@ -1,9 +1,11 @@
+from django_filters import rest_framework as filters
 from rest_framework import viewsets
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from .filters import CarShowroomViewSetFilter, UniqueCustomerViewSetFilter, ShowroomCustomerSaleViewSetFilter
 from .models import CarShowroom, UniqueCustomer, ShowroomCustomerSale
 from .serializers import CarShowroomSerializer, UniqueCustomerSerializer, ShowroomCustomerSaleSerializer
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
 class CarShowroomViewSet(viewsets.ModelViewSet):
@@ -11,12 +13,9 @@ class CarShowroomViewSet(viewsets.ModelViewSet):
     queryset = CarShowroom.objects.all()
     permission_classes = (IsAuthenticatedOrReadOnly,)
     filterset_class = CarShowroomViewSetFilter
-
-    def get_queryset(self):
-        sorting_field = self.request.GET.get('sort_field')
-        if sorting_field is not None:
-            return CarShowroom.objects.order_by(sorting_field)
-        return CarShowroom.objects.all()
+    filter_backends = [SearchFilter, OrderingFilter, filters.DjangoFilterBackend]
+    search_fields = ['name']
+    ordering_fields = ['balance', 'country', 'name']
 
     # def get_permissions(self):
     #     permission_classes = []
@@ -34,12 +33,9 @@ class UniqueCustomerViewSet(viewsets.ModelViewSet):
     queryset = UniqueCustomer.objects.all()
     permission_classes = (IsAuthenticatedOrReadOnly,)
     filterset_class = UniqueCustomerViewSetFilter
-
-    def get_queryset(self):
-        sorting_field = self.request.GET.get('sort_field')
-        if sorting_field is not None:
-            return UniqueCustomer.objects.order_by(sorting_field)
-        return UniqueCustomer.objects.all()
+    filter_backends = [SearchFilter, OrderingFilter, filters.DjangoFilterBackend]
+    search_fields = ['customer__name']
+    ordering_fields = ['purchase_amount']
 
 
 class ShowroomCustomerSaleViewSet(viewsets.ModelViewSet):
@@ -47,9 +43,6 @@ class ShowroomCustomerSaleViewSet(viewsets.ModelViewSet):
     queryset = ShowroomCustomerSale.objects.all()
     permission_classes = (IsAuthenticatedOrReadOnly,)
     filterset_class = ShowroomCustomerSaleViewSetFilter
-
-    def get_queryset(self):
-        sorting_field = self.request.GET.get('sort_field')
-        if sorting_field is not None:
-            return ShowroomCustomerSale.objects.order_by(sorting_field)
-        return ShowroomCustomerSale.objects.all()
+    filter_backends = [SearchFilter, OrderingFilter, filters.DjangoFilterBackend]
+    search_fields = ['car_showroom__name', 'customer__name', 'car__name']
+    ordering_fields = ['price', 'sale_date']

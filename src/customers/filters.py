@@ -22,7 +22,7 @@ class OfferViewSetFilter(filters.FilterSet):
 
 class CustomerShowroomPurchaseViewSetFilter(filters.FilterSet):
     class Meta:
-        model = Offer
+        model = CustomerShowroomPurchase
         fields = {
             'is_sale': ['isnull'],
             'sale_date': ['lte', 'gte'],

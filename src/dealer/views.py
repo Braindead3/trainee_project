@@ -1,4 +1,6 @@
+from django_filters import rest_framework as filters
 from rest_framework import viewsets
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 from .filters import CarViewSetFilter, DiscountViewSetFilter, DealerViewSetFilter, CarForSaleViewSetFilter, \
     DealerShowroomSaleViewSetFilter
@@ -11,57 +13,42 @@ class CarViewSet(viewsets.ModelViewSet):
     serializer_class = CarSerializer
     queryset = Car.objects.all()
     filterset_class = CarViewSetFilter
-
-    def get_queryset(self):
-        sorting_field = self.request.GET.get('sort_field')
-        if sorting_field is not None:
-            return Car.objects.order_by(sorting_field)
-        return Car.objects.all()
+    filter_backends = [SearchFilter, OrderingFilter, filters.DjangoFilterBackend]
+    search_fields = ['name']
+    ordering_fields = ['name', 'year', 'engine_volume', 'mileage']
 
 
 class DiscountViewSet(viewsets.ModelViewSet):
     serializer_class = DiscountSerializer
     queryset = Discount.objects.all()
     filterset_class = DiscountViewSetFilter
-
-    def get_queryset(self):
-        sorting_field = self.request.GET.get('sort_field')
-        if sorting_field is not None:
-            return Discount.objects.order_by(sorting_field)
-        return Discount.objects.all()
+    filter_backends = [SearchFilter, OrderingFilter, filters.DjangoFilterBackend]
+    search_fields = ['dealer__name']
+    ordering_fields = ['start_date', 'end_date', 'discount']
 
 
 class DealerViewSet(viewsets.ModelViewSet):
     serializer_class = DealerSerializer
     queryset = Dealer.objects.all()
     filterset_class = DealerViewSetFilter
-
-    def get_queryset(self):
-        sorting_field = self.request.GET.get('sort_field')
-        if sorting_field is not None:
-            return Dealer.objects.order_by(sorting_field)
-        return Dealer.objects.all()
+    filter_backends = [SearchFilter, OrderingFilter, filters.DjangoFilterBackend]
+    search_fields = ['dealer__name', 'car_showroom__name', 'car__name']
+    ordering_fields = ['start_date', 'end_date', 'discount', 'price']
 
 
 class CarForSaleViewSet(viewsets.ModelViewSet):
     serializer_class = CarForSaleSerializer
     queryset = CarForSale.objects.all()
     filterset_class = CarForSaleViewSetFilter
-
-    def get_queryset(self):
-        sorting_field = self.request.GET.get('sort_field')
-        if sorting_field is not None:
-            return CarForSale.objects.order_by(sorting_field)
-        return CarForSale.objects.all()
+    filter_backends = [SearchFilter, OrderingFilter, filters.DjangoFilterBackend]
+    search_fields = ['car__name', 'dealer__name']
+    ordering_fields = ['price']
 
 
 class DealerShowroomSaleViewSet(viewsets.ModelViewSet):
     serializer_class = DealerShowroomSaleSerializer
     queryset = DealerShowroomSale.objects.all()
     filterset_class = DealerShowroomSaleViewSetFilter
-
-    def get_queryset(self):
-        sorting_field = self.request.GET.get('sort_field')
-        if sorting_field is not None:
-            return sorting_field.objects.order_by(sorting_field)
-        return sorting_field.objects.all()
+    filter_backends = [SearchFilter, OrderingFilter, filters.DjangoFilterBackend]
+    search_fields = ['car_showroom__name', 'dealer__name', 'car__name']
+    ordering_fields = ['sale_date', 'discount', 'price']
