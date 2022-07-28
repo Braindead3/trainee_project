@@ -25,6 +25,15 @@ class CarShowroom(BaseModel):
         return self.name
 
 
+class ShowroomCarsForSale(BaseModel):
+    car = models.ForeignKey('dealer.DealerShowroomSale', on_delete=models.SET_NULL, null=True)
+    showroom = models.ForeignKey(CarShowroom, on_delete=models.SET_NULL, null=True)
+    price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD', blank=True, null=True)
+
+    def __str__(self):
+        return self.car.car.car.name + ' ' + self.showroom.name
+
+
 class ShowroomCustomerSale(BaseModel):
     car_showroom = models.ForeignKey(CarShowroom, on_delete=models.SET_NULL, null=True)
     customer = models.ForeignKey('customers.Customer', on_delete=models.SET_NULL, null=True)
@@ -32,3 +41,6 @@ class ShowroomCustomerSale(BaseModel):
     sale_date = models.DateTimeField(auto_now_add=True)
     discount = models.ForeignKey('dealer.Discount', on_delete=models.SET_NULL, null=True)
     price = MoneyField(max_digits=14, decimal_places=2, default=0, default_currency='USD')
+
+    def __str__(self):
+        return f'Customer:{self.customer.name} Car:{self.car.name}'

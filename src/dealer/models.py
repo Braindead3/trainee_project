@@ -65,6 +65,7 @@ class Discount(BaseModel):
     end_date = models.DateTimeField()
     discount = models.PositiveIntegerField()
     dealer = models.ForeignKey(Dealer, on_delete=models.SET_NULL, blank=True, null=True)
+    showroom = models.ForeignKey('car_showroom.CarShowroom', on_delete=models.SET_NULL, blank=True, null=True)
 
     class Meta:
         constraints = (
@@ -82,8 +83,8 @@ class DealerShowroomSale(BaseModel):
     car_showroom = models.ForeignKey('car_showroom.CarShowroom', on_delete=models.SET_NULL, null=True)
     car = models.ForeignKey(CarForSale, on_delete=models.SET_NULL, null=True)
     sale_date = models.DateTimeField(auto_now_add=True)
-    discount = models.ForeignKey(Discount, on_delete=models.SET_NULL, null=True)
+    discount = models.ForeignKey(Discount, on_delete=models.SET_NULL, null=True, blank=True)
     price = MoneyField(max_digits=14, decimal_places=2, default=0, default_currency='USD', blank=True, null=True)
 
     def __str__(self):
-        return self.dealer.name
+        return f'Dealer:{self.dealer.name} Car:{self.car.car.name} Showroom:{self.car_showroom.name} Is_active:{self.is_active}'
