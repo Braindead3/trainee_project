@@ -15,6 +15,8 @@ from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+from celery.schedules import crontab
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
@@ -46,6 +48,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'debug_toolbar',
     'django_filters',
+    'django_celery_beat',
 
     # apps
     'src.car_showroom',
@@ -183,3 +186,20 @@ if DEBUG:
 
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["0.0.0.0", "10.0.2.2"]
+
+# CELERY
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER', 'redis://redis:6379/0')
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_BROKER', 'redis://redis:6379/0')
+
+# CELERY BEAT
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_BEAT_SCHEDULE = {
+    'buy_cars_for_customer': {
+        'task': 'src.car_showroom.tasks.buy_cars_for_customer',
+        'schedule': crontab(minute='*/10'),
+    },
+    'buy_cars_for_showroom': {
+        'task': 'src.dealer.tasks.buy_cars_for_showroom',
+        'schedule': crontab(minute='*/12'),
+    }
+}

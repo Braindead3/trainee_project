@@ -13,6 +13,9 @@ djangorestframework-simplejwt = "*"
 drf-yasg = "*"
 django-debug-toolbar = "*"
 django-filter = "*"
+celery = "*"
+redis = "*"
+django-celery-beat = "*"
 
 [dev-packages]
 
