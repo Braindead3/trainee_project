@@ -9,7 +9,7 @@ from ..dealer.models import Discount
 def buy_cars_for_customer():
     customers = Customer.objects.all()
     for customer in customers:
-        offers = Offer.objects.filter(customer=customer)
+        offers = Offer.objects.filter(customer=customer, is_active=True)
         for offer in offers:
             cars = ShowroomCarsForSale.objects.filter(car__car__car=offer.car, is_active=True)
             d = {}
@@ -50,4 +50,8 @@ def buy_cars_for_customer():
 
                 car.is_active = False
                 car.save()
+
+                offer.is_active = False
+                offer.save()
+
     return 'complete'
