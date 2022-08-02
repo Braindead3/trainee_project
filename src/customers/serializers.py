@@ -49,6 +49,20 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
+class UserUsernameSerializer(serializers.Serializer):
+    username = serializers.CharField()
+
+    class Meta:
+        fields = ['username']
+
+
+class UserEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    class Meta:
+        fields = ['email']
+
+
 class UserResetPasswordSerializer(serializers.Serializer):
     password1 = serializers.CharField()
     password2 = serializers.CharField()

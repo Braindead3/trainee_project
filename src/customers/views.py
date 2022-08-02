@@ -1,16 +1,18 @@
 from django.contrib.auth.models import User
+from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from django_filters import rest_framework as filters
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
-from django.contrib.sites.shortcuts import get_current_site
+from rest_framework_simplejwt.tokens import RefreshToken
+
 from .filters import CustomerViewSetFilter, OfferViewSetFilter, CustomerShowroomPurchaseViewSetFilter
 from .models import Customer, Offer, CustomerShowroomPurchase
 from .serializers import (CustomerSerializer, OfferSerializer, CustomerShowroomPurchaseSerializer, UserSerializer,
-                          UserResetPasswordSerializer)
+                          UserResetPasswordSerializer, UserUsernameSerializer, UserEmailSerializer)
 from .utils import Email, get_user_by_token
 
 
@@ -35,6 +37,7 @@ class OfferViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated,)
 
     @action(methods=['post'], detail=False)
     def register_new_user(self, request, *args, **kwargs):
@@ -82,7 +85,7 @@ class UserViewSet(viewsets.ModelViewSet):
             Email.send_email(user_email, subject, email_body)
 
             return Response('Email sanded')
-        return Response('Token not provided')
+        return Response('Token not provided or invalid token')
 
     @action(methods=['post'], detail=False)
     def change_password(self, request):
@@ -98,6 +101,39 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
             data = serializer.errors
         return Response(data)
+
+    @action(methods=['post'], detail=False)
+    def change_username(self, request):
+        serializer = UserUsernameSerializer(data=request.data)
+        data = {}
+        if serializer.is_valid():
+            token = request.META.get('HTTP_AUTHORIZATION', None)
+            if token:
+                token = request.META.get('HTTP_AUTHORIZATION', None).split()[-1]
+                user: User = get_user_by_token(token)
+                user.username = serializer.validated_data['username']
+                user.save()
+                return Response('New username set')
+        else:
+            data = serializer.errors
+        return Response(data)
+
+    @action(methods=['post'], detail=False)
+    def change_email(self, request):
+        serializer = UserEmailSerializer(data=request.data)
+        data = {}
+        if serializer.is_valid():
+            token = request.META.get('HTTP_AUTHORIZATION', None)
+            if token:
+                token = request.META.get('HTTP_AUTHORIZATION', None).split()[-1]
+                user: User = get_user_by_token(token)
+                user.username = serializer.validated_data['username']
+                user.save()
+                return Response('New username set')
+        else:
+            data = serializer.errors
+        return Response(data)
+
 
 class CustomerShowroomPurchaseViewSet(viewsets.ModelViewSet):
     serializer_class = CustomerShowroomPurchaseSerializer
