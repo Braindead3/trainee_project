@@ -47,7 +47,7 @@ class CarForSaleViewSet(viewsets.ModelViewSet):
 
 class DealerShowroomSaleViewSet(viewsets.ModelViewSet):
     serializer_class = DealerShowroomSaleSerializer
-    queryset = DealerShowroomSale.objects.all()
+    queryset = DealerShowroomSale.objects.all().select_related('car_showroom')
     filterset_class = DealerShowroomSaleViewSetFilter
     filter_backends = [SearchFilter, OrderingFilter, filters.DjangoFilterBackend]
     search_fields = ['car_showroom__name', 'dealer__name', 'car__name']
