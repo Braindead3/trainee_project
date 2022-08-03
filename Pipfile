@@ -16,6 +16,8 @@ django-filter = "*"
 celery = "*"
 redis = "*"
 django-celery-beat = "*"
+django-rest-registration = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
