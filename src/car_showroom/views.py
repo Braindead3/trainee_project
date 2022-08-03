@@ -1,11 +1,15 @@
 from django_filters import rest_framework as filters
+
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
 
 from .filters import CarShowroomViewSetFilter, UniqueCustomerViewSetFilter, ShowroomCustomerSaleViewSetFilter
 from .models import CarShowroom, UniqueCustomer, ShowroomCustomerSale
 from .serializers import CarShowroomSerializer, UniqueCustomerSerializer, ShowroomCustomerSaleSerializer
+from .utils import get_amount_of_sold_cars,get_amount_of_earnings,get_amount_of_unique_customer
 
 
 class CarShowroomViewSet(viewsets.ModelViewSet):
@@ -17,15 +21,26 @@ class CarShowroomViewSet(viewsets.ModelViewSet):
     search_fields = ['name']
     ordering_fields = ['balance', 'country', 'name']
 
-    # def get_permissions(self):
-    #     permission_classes = []
-    #     if self.action == 'create':
-    #         permission_classes = [AllowAny]
-    #     elif self.action == 'retrieve' or self.action == 'update' or self.action == 'partial_update':
-    #         permission_classes = [IsLoggedInUserOrAdmin]
-    #     elif self.action == 'list' or self.action == 'destroy':
-    #         permission_classes = [IsAdminUser]
-    #     return [permission() for permission in permission_classes]
+    @action(methods=['get'], detail=True)
+    def amount_of_sold_cars(self, request, pk):
+        if pk:
+            amount_of_cars = get_amount_of_sold_cars(pk)
+            return Response({'amount of sold cars': amount_of_cars})
+        return Response('pk not provided')
+
+    @action(methods=['get'], detail=True)
+    def amount_of_earnings(self, request, pk):
+        if pk:
+            amount_of_earnings = get_amount_of_earnings(pk)
+            return Response({'amount of earnings': amount_of_earnings})
+        return Response('pk not provided or showroom does not exist')
+
+    @action(methods=['get'], detail=True)
+    def amount_of_unique_customers(self, request, pk):
+        if pk:
+            amount_of_unique_customers = get_amount_of_unique_customer(pk)
+            return Response({'amount of unique customers': amount_of_unique_customers})
+        return Response('pk not provided or showroom does not exist')
 
 
 class UniqueCustomerViewSet(viewsets.ModelViewSet):
