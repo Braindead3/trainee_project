@@ -37,7 +37,6 @@ class OfferViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated,)
 
     @action(methods=['post'], detail=False)
     def register_new_user(self, request, *args, **kwargs):
@@ -65,7 +64,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def verify_account(self, request, *args, **kwargs):
         token = request.GET.get('token')
         user = get_user_by_token(token)
-        return Response(f'it works,user:{user.username}')
+        return Response(f'Verify use is :{user.username}')
 
     @action(methods=['get'], detail=False)
     def request_to_change_password(self, request):

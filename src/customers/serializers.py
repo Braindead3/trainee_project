@@ -53,14 +53,14 @@ class UserUsernameSerializer(serializers.Serializer):
     username = serializers.CharField()
 
     class Meta:
-        fields = ['username']
+        fields = ('username',)
 
 
 class UserEmailSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
     class Meta:
-        fields = ['email']
+        fields = ('email',)
 
 
 class UserResetPasswordSerializer(serializers.Serializer):
