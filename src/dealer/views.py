@@ -1,12 +1,15 @@
 from django_filters import rest_framework as filters
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.response import Response
 
 from .filters import CarViewSetFilter, DiscountViewSetFilter, DealerViewSetFilter, CarForSaleViewSetFilter, \
     DealerShowroomSaleViewSetFilter
 from .models import Car, Dealer, CarForSale, Discount, DealerShowroomSale
 from .serializers import (CarSerializer, DiscountSerializer, DealerSerializer,
                           DealerShowroomSaleSerializer, CarForSaleSerializer)
+from .utils import get_amount_of_sold_cars, get_earnings,get_amount_of_showrooms
 
 
 class CarViewSet(viewsets.ModelViewSet):
@@ -34,6 +37,27 @@ class DealerViewSet(viewsets.ModelViewSet):
     filter_backends = [SearchFilter, OrderingFilter, filters.DjangoFilterBackend]
     search_fields = ['dealer__name', 'car_showroom__name', 'car__name']
     ordering_fields = ['start_date', 'end_date', 'discount', 'price']
+
+    @action(methods=['get'], detail=True)
+    def amount_of_sold_cars(self, request, pk):
+        if pk:
+            amount_of_cars = get_amount_of_sold_cars(pk)
+            return Response({'amount of sold cars': amount_of_cars})
+        return Response('pk not provided or dealer does not exist')
+
+    @action(methods=['get'], detail=True)
+    def amount_of_earnings(self, request, pk):
+        if pk:
+            earnings = get_earnings(pk)
+            return Response({'amount of sold cars': earnings})
+        return Response('pk not provided or dealer does not exist')
+
+    @action(methods=['get'], detail=True)
+    def amount_of_showrooms(self, request, pk):
+        if pk:
+            amount_of_showrooms = get_amount_of_showrooms(pk)
+            return Response({'amount of showrooms': amount_of_showrooms})
+        return Response('pk not provided or dealer does not exist')
 
 
 class CarForSaleViewSet(viewsets.ModelViewSet):
