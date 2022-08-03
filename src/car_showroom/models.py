@@ -38,7 +38,7 @@ class ShowroomCustomerSale(BaseModel):
     car_showroom = models.ForeignKey(CarShowroom, on_delete=models.SET_NULL, null=True)
     customer = models.ForeignKey('customers.Customer', on_delete=models.SET_NULL, null=True)
     car = models.ForeignKey('dealer.Car', on_delete=models.SET_NULL, null=True)
-    sale_date = models.DateTimeField(auto_now_add=True)
+    sale_date = models.DateTimeField(blank=True, null=True, default=None)
     discount = models.ForeignKey('dealer.Discount', on_delete=models.SET_NULL, null=True, blank=True)
     price = MoneyField(max_digits=14, decimal_places=2, default=0, default_currency='USD')
 

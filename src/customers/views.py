@@ -12,7 +12,7 @@ from .filters import CustomerViewSetFilter, OfferViewSetFilter, CustomerShowroom
 from .models import Customer, Offer, CustomerShowroomPurchase
 from .serializers import (CustomerSerializer, OfferSerializer, CustomerShowroomPurchaseSerializer, UserSerializer,
                           UserResetPasswordSerializer, UserUsernameSerializer, UserEmailSerializer)
-from .utils import Email, get_user_by_token
+from .utils import Email, get_user_by_token, get_amount_of_money_spent, get_customer_cars
 
 
 class CustomerViewSet(viewsets.ModelViewSet):
@@ -22,6 +22,20 @@ class CustomerViewSet(viewsets.ModelViewSet):
     filter_backends = [SearchFilter, OrderingFilter, filters.DjangoFilterBackend]
     search_fields = ['name', 'address']
     ordering_fields = ['balance', 'name']
+
+    @action(methods=['get'], detail=True)
+    def amount_of_money_spent(self, request, pk):
+        if pk:
+            amount_of_money_spend = get_amount_of_money_spent(pk)
+            return Response({'amount of money spend': amount_of_money_spend})
+        return Response('pk not provided or customer does not exist')
+
+    @action(methods=['get'], detail=True)
+    def all_customer_cars(self, request, pk):
+        if pk:
+            customer_cars = get_customer_cars(pk)
+            return Response({'customer cars': customer_cars})
+        return Response('pk not provided or customer does not exist')
 
 
 class OfferViewSet(viewsets.ModelViewSet):

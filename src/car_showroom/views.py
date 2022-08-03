@@ -1,5 +1,4 @@
 from django_filters import rest_framework as filters
-
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -9,7 +8,7 @@ from rest_framework.response import Response
 from .filters import CarShowroomViewSetFilter, UniqueCustomerViewSetFilter, ShowroomCustomerSaleViewSetFilter
 from .models import CarShowroom, UniqueCustomer, ShowroomCustomerSale
 from .serializers import CarShowroomSerializer, UniqueCustomerSerializer, ShowroomCustomerSaleSerializer
-from .utils import get_amount_of_sold_cars,get_amount_of_earnings,get_amount_of_unique_customer
+from .utils import get_amount_of_sold_cars, get_amount_of_earnings, get_amount_of_unique_customer
 
 
 class CarShowroomViewSet(viewsets.ModelViewSet):

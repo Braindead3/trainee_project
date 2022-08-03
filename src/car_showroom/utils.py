@@ -1,7 +1,6 @@
-from django.shortcuts import get_object_or_404
+from django.db.models import Sum
 
 from .models import CarShowroom, ShowroomCustomerSale, UniqueCustomer
-from django.db.models import Sum
 
 
 def get_amount_of_sold_cars(showroom_id):
