@@ -20,21 +20,21 @@ class CarShowroomViewSet(viewsets.ModelViewSet):
     search_fields = ('name',)
     ordering_fields = ('balance', 'country', 'name')
 
-    @action(methods=['get'], detail=True)
+    @action(methods=('get',), detail=True)
     def amount_of_sold_cars(self, request, pk):
         if pk:
             amount_of_cars = get_amount_of_sold_cars(pk)
             return Response({'amount of sold cars': amount_of_cars})
         return Response('pk not provided')
 
-    @action(methods=['get'], detail=True)
+    @action(methods=('get',), detail=True)
     def amount_of_earnings(self, request, pk):
         if pk:
             amount_of_earnings = get_amount_of_earnings(pk)
             return Response({'amount of earnings': amount_of_earnings})
         return Response('pk not provided or showroom does not exist')
 
-    @action(methods=['get'], detail=True)
+    @action(methods=('get',), detail=True)
     def amount_of_unique_customers(self, request, pk):
         if pk:
             amount_of_unique_customers = get_amount_of_unique_customer(pk)
@@ -47,9 +47,9 @@ class UniqueCustomerViewSet(viewsets.ModelViewSet):
     queryset = UniqueCustomer.objects.all()
     permission_classes = (IsAuthenticatedOrReadOnly,)
     filterset_class = UniqueCustomerViewSetFilter
-    filter_backends = [SearchFilter, OrderingFilter, filters.DjangoFilterBackend]
-    search_fields = ['customer__name']
-    ordering_fields = ['purchase_amount']
+    filter_backends = (SearchFilter, OrderingFilter, filters.DjangoFilterBackend)
+    search_fields = ('customer__name',)
+    ordering_fields = ('purchase_amount',)
 
 
 class ShowroomCustomerSaleViewSet(viewsets.ModelViewSet):
@@ -57,6 +57,6 @@ class ShowroomCustomerSaleViewSet(viewsets.ModelViewSet):
     queryset = ShowroomCustomerSale.objects.all()
     permission_classes = (IsAuthenticatedOrReadOnly,)
     filterset_class = ShowroomCustomerSaleViewSetFilter
-    filter_backends = [SearchFilter, OrderingFilter, filters.DjangoFilterBackend]
-    search_fields = ['car_showroom__name', 'customer__name', 'car__name']
-    ordering_fields = ['price', 'sale_date']
+    filter_backends = (SearchFilter, OrderingFilter, filters.DjangoFilterBackend)
+    search_fields = ('car_showroom__name', 'customer__name', 'car__name')
+    ordering_fields = ('price', 'sale_date')

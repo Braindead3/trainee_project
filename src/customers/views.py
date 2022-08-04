@@ -20,17 +20,17 @@ class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
     filterset_class = CustomerViewSetFilter
     filter_backends = [SearchFilter, OrderingFilter, filters.DjangoFilterBackend]
-    search_fields = ['name', 'address']
-    ordering_fields = ['balance', 'name']
+    search_fields = ('name', 'address')
+    ordering_fields = ('balance', 'name')
 
-    @action(methods=['get'], detail=True)
+    @action(methods=('get',), detail=True)
     def amount_of_money_spent(self, request, pk):
         if pk:
             amount_of_money_spend = get_amount_of_money_spent(pk)
             return Response({'amount of money spend': amount_of_money_spend})
         return Response('pk not provided or customer does not exist')
 
-    @action(methods=['get'], detail=True)
+    @action(methods=('get',), detail=True)
     def all_customer_cars(self, request, pk):
         if pk:
             customer_cars = get_customer_cars(pk)
@@ -43,15 +43,15 @@ class OfferViewSet(viewsets.ModelViewSet):
     queryset = Offer.objects.all()
     filterset_class = OfferViewSetFilter
     filter_backends = [SearchFilter, OrderingFilter, filters.DjangoFilterBackend]
-    search_fields = ['car__name', 'customer__name']
-    ordering_fields = ['max_price']
+    search_fields = ('car__name', 'customer__name')
+    ordering_fields = ('max_price',)
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-    @action(methods=['post'], detail=False)
+    @action(methods=('post',), detail=False)
     def register_new_user(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         data = {}
@@ -73,13 +73,13 @@ class UserViewSet(viewsets.ModelViewSet):
             data = serializer.errors
         return Response(data, status=status.HTTP_201_CREATED)
 
-    @action(methods=['get'], detail=False)
+    @action(methods=('get',), detail=False)
     def verify_account(self, request, *args, **kwargs):
         token = request.GET.get('token')
         user = get_user_by_token(token)
         return Response(f'Verify use is :{user.username}')
 
-    @action(methods=['get'], detail=False)
+    @action(methods=('get',), detail=False)
     def request_to_change_password(self, request):
 
         token = request.META.get('HTTP_AUTHORIZATION', None)
@@ -99,7 +99,7 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response('Email sanded')
         return Response('Token not provided or invalid token')
 
-    @action(methods=['post'], detail=False)
+    @action(methods=('post',), detail=False)
     def change_password(self, request):
         serializer = UserResetPasswordSerializer(data=request.data)
         if serializer.is_valid():
@@ -114,7 +114,7 @@ class UserViewSet(viewsets.ModelViewSet):
             data = serializer.errors
         return Response(data)
 
-    @action(methods=['post'], detail=False)
+    @action(methods=('post',), detail=False)
     def change_username(self, request):
         serializer = UserUsernameSerializer(data=request.data)
         data = {}
@@ -130,7 +130,7 @@ class UserViewSet(viewsets.ModelViewSet):
             data = serializer.errors
         return Response(data)
 
-    @action(methods=['post'], detail=False)
+    @action(methods=('post',), detail=False)
     def change_email(self, request):
         serializer = UserEmailSerializer(data=request.data)
         data = {}
@@ -152,5 +152,5 @@ class CustomerShowroomPurchaseViewSet(viewsets.ModelViewSet):
     queryset = CustomerShowroomPurchase.objects.all()
     filterset_class = CustomerShowroomPurchaseViewSetFilter
     filter_backends = [SearchFilter, OrderingFilter, filters.DjangoFilterBackend]
-    search_fields = ['customer__name']
-    ordering_fields = ['is_sale', 'sale_date', 'purchase_date', 'price']
+    search_fields = ('customer__name',)
+    ordering_fields = ('is_sale', 'sale_date', 'purchase_date', 'price')
