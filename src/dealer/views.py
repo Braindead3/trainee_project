@@ -9,7 +9,7 @@ from .filters import CarViewSetFilter, DiscountViewSetFilter, DealerViewSetFilte
 from .models import Car, Dealer, CarForSale, Discount, DealerShowroomSale
 from .serializers import (CarSerializer, DiscountSerializer, DealerSerializer,
                           DealerShowroomSaleSerializer, CarForSaleSerializer)
-from .utils import get_amount_of_sold_cars, get_earnings,get_amount_of_showrooms
+from src.dealer.utils import get_amount_of_sold_cars, get_earnings,get_amount_of_showrooms
 
 
 class CarViewSet(viewsets.ModelViewSet):
@@ -35,8 +35,8 @@ class DealerViewSet(viewsets.ModelViewSet):
     queryset = Dealer.objects.all()
     filterset_class = DealerViewSetFilter
     filter_backends = [SearchFilter, OrderingFilter, filters.DjangoFilterBackend]
-    search_fields = ['dealer__name', 'car_showroom__name', 'car__name']
-    ordering_fields = ['start_date', 'end_date', 'discount', 'price']
+    search_fields = ('dealer__name', 'car_showroom__name', 'car__name')
+    ordering_fields = ('start_date', 'end_date', 'discount', 'price')
 
     @action(methods=['get'], detail=True)
     def amount_of_sold_cars(self, request, pk):
@@ -65,8 +65,8 @@ class CarForSaleViewSet(viewsets.ModelViewSet):
     queryset = CarForSale.objects.all()
     filterset_class = CarForSaleViewSetFilter
     filter_backends = [SearchFilter, OrderingFilter, filters.DjangoFilterBackend]
-    search_fields = ['car__name', 'dealer__name']
-    ordering_fields = ['price']
+    search_fields = ('car__name', 'dealer__name')
+    ordering_fields = ('price',)
 
 
 class DealerShowroomSaleViewSet(viewsets.ModelViewSet):
@@ -74,5 +74,5 @@ class DealerShowroomSaleViewSet(viewsets.ModelViewSet):
     queryset = DealerShowroomSale.objects.all().select_related('car_showroom')
     filterset_class = DealerShowroomSaleViewSetFilter
     filter_backends = [SearchFilter, OrderingFilter, filters.DjangoFilterBackend]
-    search_fields = ['car_showroom__name', 'dealer__name', 'car__name']
-    ordering_fields = ['sale_date', 'discount', 'price']
+    search_fields = ('car_showroom__name', 'dealer__name', 'car__name')
+    ordering_fields = ('sale_date', 'discount', 'price')

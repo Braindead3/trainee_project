@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from .filters import CarShowroomViewSetFilter, UniqueCustomerViewSetFilter, ShowroomCustomerSaleViewSetFilter
 from .models import CarShowroom, UniqueCustomer, ShowroomCustomerSale
 from .serializers import CarShowroomSerializer, UniqueCustomerSerializer, ShowroomCustomerSaleSerializer
-from .utils import get_amount_of_sold_cars, get_amount_of_earnings, get_amount_of_unique_customer
+from src.car_showroom.utils import get_amount_of_sold_cars, get_amount_of_earnings, get_amount_of_unique_customer
 
 
 class CarShowroomViewSet(viewsets.ModelViewSet):
@@ -16,9 +16,9 @@ class CarShowroomViewSet(viewsets.ModelViewSet):
     queryset = CarShowroom.objects.all()
     permission_classes = (IsAuthenticatedOrReadOnly,)
     filterset_class = CarShowroomViewSetFilter
-    filter_backends = [SearchFilter, OrderingFilter, filters.DjangoFilterBackend]
-    search_fields = ['name']
-    ordering_fields = ['balance', 'country', 'name']
+    filter_backends = (SearchFilter, OrderingFilter, filters.DjangoFilterBackend)
+    search_fields = ('name',)
+    ordering_fields = ('balance', 'country', 'name')
 
     @action(methods=['get'], detail=True)
     def amount_of_sold_cars(self, request, pk):

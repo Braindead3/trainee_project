@@ -12,7 +12,7 @@ from .filters import CustomerViewSetFilter, OfferViewSetFilter, CustomerShowroom
 from .models import Customer, Offer, CustomerShowroomPurchase
 from .serializers import (CustomerSerializer, OfferSerializer, CustomerShowroomPurchaseSerializer, UserSerializer,
                           UserResetPasswordSerializer, UserUsernameSerializer, UserEmailSerializer)
-from .utils import Email, get_user_by_token, get_amount_of_money_spent, get_customer_cars
+from src.customers.utils import Email, get_user_by_token, get_amount_of_money_spent, get_customer_cars
 
 
 class CustomerViewSet(viewsets.ModelViewSet):

@@ -4,9 +4,9 @@ from .models import DealerShowroomSale
 
 
 def get_amount_of_sold_cars(dealer_id):
-    dealer_sales = DealerShowroomSale.objects.filter(dealer=dealer_id)
-    if dealer_sales:
-        return dealer_sales.count()
+    dealer_sale_cars = DealerShowroomSale.objects.filter(dealer=dealer_id)
+    if dealer_sale_cars:
+        return dealer_sale_cars.count()
     return 'Dealer does not exists'
 
 
