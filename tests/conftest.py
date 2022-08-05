@@ -29,10 +29,13 @@ def dealer():
 
 
 @pytest.fixture
-def car():
-    return Car.objects.create(name="test_car",
-                              year=2020,
-                              gearbox='automatic',
-                              engine_volume=2.5,
-                              mileage=500,
-                              color="white")
+def car(**kwargs):
+    def create_car(**kwargs):
+        name = kwargs.pop('name')
+        year = kwargs.pop('year')
+        gearbox = kwargs.pop('gearbox')
+        engine_volume = kwargs.pop('engine_volume')
+        mileage = kwargs.pop('mileage')
+        color = kwargs.pop('color')
+
+    return create_car
