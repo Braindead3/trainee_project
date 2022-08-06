@@ -37,5 +37,11 @@ def car(**kwargs):
         engine_volume = kwargs.pop('engine_volume')
         mileage = kwargs.pop('mileage')
         color = kwargs.pop('color')
-
+        car = Car.objects.create(name=name,
+                                 year=year,
+                                 gearbox=gearbox,
+                                 engine_volume=engine_volume,
+                                 mileage=mileage,
+                                 color=color)
+        return car
     return create_car
