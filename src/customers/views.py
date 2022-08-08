@@ -58,7 +58,9 @@ class UserViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             user = serializer.save()
             data['response'] = 'successfully registered a new user'
+
             data['username'] = user.username
+            data['email'] = user.email
 
             token = RefreshToken.for_user(user).access_token
             user_email = user.email
@@ -77,7 +79,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def verify_account(self, request, *args, **kwargs):
         token = request.GET.get('token')
         user = get_user_by_token(token)
-        return Response(f'Verify use is :{user.username}')
+        return Response(f'Verified user is :{user.username}')
 
     @action(methods=('get',), detail=False)
     def request_to_change_password(self, request):

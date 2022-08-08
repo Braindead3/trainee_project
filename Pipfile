@@ -18,6 +18,7 @@ redis = "*"
 django-celery-beat = "*"
 django-rest-registration = "*"
 python-dotenv = "*"
+pytest-django = "*"
 
 [dev-packages]
 
