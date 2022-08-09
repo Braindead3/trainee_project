@@ -19,6 +19,7 @@ django-celery-beat = "*"
 django-rest-registration = "*"
 python-dotenv = "*"
 pytest-django = "*"
+gunicorn = "*"
 
 [dev-packages]
 
