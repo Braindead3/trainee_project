@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import CheckConstraint, Q
 from django_countries.fields import CountryField
-from djmoney.forms import MoneyField
+from djmoney.models.fields import MoneyField
 
 from core.common_models import BaseModel
 
@@ -31,8 +31,8 @@ class Car(BaseModel):
                 check=Q(engine_volume__gte=0.0),
                 name='car_engine_volume_gte_0'),
             CheckConstraint(
-                check=Q(engine_year__gte=1900),
-                name='car_engine_gte_then_1900'),
+                check=Q(year__gte=1900),
+                name='car_year_gte_then_1900'),
         )
 
     def __str__(self):
@@ -54,10 +54,10 @@ class Dealer(BaseModel):
 class CarForSale(BaseModel):
     car = models.ForeignKey(Car, on_delete=models.SET_NULL, null=True)
     dealer = models.ForeignKey(Dealer, on_delete=models.SET_NULL, null=True)
-    price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD')
+    price = MoneyField(max_digits=14, decimal_places=2, default_currency='USD', blank=True, null=True)
 
     def __str__(self):
-        return self.car
+        return self.car.name + ' ' + self.dealer.name
 
 
 class Discount(BaseModel):
@@ -65,6 +65,7 @@ class Discount(BaseModel):
     end_date = models.DateTimeField()
     discount = models.PositiveIntegerField()
     dealer = models.ForeignKey(Dealer, on_delete=models.SET_NULL, blank=True, null=True)
+    showroom = models.ForeignKey('car_showroom.CarShowroom', on_delete=models.SET_NULL, blank=True, null=True)
 
     class Meta:
         constraints = (
@@ -74,7 +75,7 @@ class Discount(BaseModel):
         )
 
     def __str__(self):
-        return self.start_date
+        return self.dealer.name
 
 
 class DealerShowroomSale(BaseModel):
@@ -82,4 +83,8 @@ class DealerShowroomSale(BaseModel):
     car_showroom = models.ForeignKey('car_showroom.CarShowroom', on_delete=models.SET_NULL, null=True)
     car = models.ForeignKey(CarForSale, on_delete=models.SET_NULL, null=True)
     sale_date = models.DateTimeField(auto_now_add=True)
-    discount = models.ForeignKey(Discount, on_delete=models.SET_NULL, null=True)
+    discount = models.ForeignKey(Discount, on_delete=models.SET_NULL, null=True, blank=True)
+    price = MoneyField(max_digits=14, decimal_places=2, default=0, default_currency='USD', blank=True, null=True)
+
+    def __str__(self):
+        return f'Dealer:{self.dealer.name} Car:{self.car.car.name} Showroom:{self.car_showroom.name} Is_active:{self.is_active}'

@@ -1,0 +1,65 @@
+version: "3.8"
+
+services:
+    nginx:
+        image: nginx:latest
+        ports:
+            - "80:8080"
+        volumes:
+            - ./nginx/nginx-setup.conf:/etc/nginx/conf.d/default.conf:ro
+            -  static_data:/static
+        depends_on:
+            - django
+    django:
+        build: .
+        container_name: django
+        command: >        
+            sh -c "python manage.py collectstatic --no-input &&
+            gunicorn config.wsgi --bind 0.0.0.0:8000
+            "
+        volumes:
+            - .:/app
+            - static_data:/app/static
+        ports:
+            -   "8000:8000"
+        environment:
+            -   CELERY_BROKER=redis://redis:6379/0/
+            -   CELERY_BACKEND=redis://redis:6379/0/
+        depends_on:
+            -   pgdb
+            -   redis
+    pgdb:
+        image: postgres
+        container_name: pgdb
+        ports:
+            -   "5432:5432"
+        environment:
+            - POSTGRES_DB=postgres
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+        volumes:
+            -   pgdata:/var/lib/postgresql/data/
+    celery:
+        build: .
+        command: celery -A config worker -l info
+        volumes:
+            -   .:/app
+        environment:
+            -   POSTGRES_DB=postgres
+            -   POSTGRES_USER=postgres
+            -   POSTGRES_PASSWORD=postgres
+        depends_on:
+            -   django
+            -   redis
+    celery-beat:
+        build: .
+        command: celery -A config beat -l info
+        volumes:
+            - .:/app
+        depends_on:
+            - redis
+    redis:
+        image: "redis:alpine"
+volumes:
+    pgdata:
+    static_data:
