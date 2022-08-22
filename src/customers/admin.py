@@ -7,7 +7,7 @@ from src.dealer.models import Car
 
 
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'address', 'balance', 'money_spent', 'amount_of_purchase_cars','favorite_car')
+    list_display = ('name', 'address', 'balance', 'money_spent', 'amount_of_purchase_cars', 'favorite_car')
 
     def money_spent(self, obj):
         money_spent = ShowroomCustomerSale.objects.filter(customer=obj).aggregate(Sum('price'))

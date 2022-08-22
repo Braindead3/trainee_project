@@ -56,5 +56,4 @@ def buy_cars_for_customer():
                 offer.is_active = False
                 offer.save()
 
-
     return 'complete'
