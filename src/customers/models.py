@@ -16,7 +16,7 @@ class Customer(BaseModel):
 class CustomerShowroomPurchase(BaseModel):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
     car_showroom = models.ForeignKey('car_showroom.CarShowroom', on_delete=models.SET_NULL, null=True)
-    discount = models.ForeignKey('dealer.Discount', on_delete=models.SET_NULL, null=True,blank=True)
+    discount = models.ForeignKey('dealer.Discount', on_delete=models.SET_NULL, null=True, blank=True)
     car = models.ForeignKey('dealer.Car', on_delete=models.SET_NULL, null=True)
     is_sale = models.BooleanField(blank=True)
     sale_date = models.DateField(blank=True)

@@ -18,11 +18,9 @@ def buy_cars_for_showroom():
                                          'color': showroom.preferred_characteristics.get('color', 'any'),
                                          }
             preferred_cars = Car.objects.filter(
-                Q(color=preferred_characteristics['color']) |
-                Q(gearbox=preferred_characteristics['gearbox']) |
-                Q(engine_volume__gte=preferred_characteristics['engine_volume']) |
-                Q(mileage__gte=preferred_characteristics['mileage']) |
-                Q(year__gte=preferred_characteristics['year'])
+                Q(color=preferred_characteristics['color']) | Q(gearbox=preferred_characteristics['gearbox']) | Q(
+                    engine_volume__gte=preferred_characteristics['engine_volume']) | Q(
+                    mileage__gte=preferred_characteristics['mileage']) | Q(year__gte=preferred_characteristics['year'])
             )
             preferred_cars_for_sale = CarForSale.objects.filter(car__in=preferred_cars).order_by('price')
             d = {}
