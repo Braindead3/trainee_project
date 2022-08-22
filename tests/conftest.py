@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 from src.dealer.models import Dealer, Car
 
+
 @pytest.fixture
 def user():
     user = User(username='fixture_user', email='fixture@gmail.com')
@@ -43,4 +44,5 @@ def car(**kwargs):
                                  mileage=mileage,
                                  color=color)
         return car
+
     return create_car
