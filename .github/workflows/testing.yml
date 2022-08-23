@@ -63,6 +63,7 @@ jobs:
     - name: Lint with flake8
       run: |
         pipenv install flake8
+        flake8
     - name: Setup test database
       env:
         POSTGRES_DB_NAME: ${{ matrix.database-name }}
@@ -83,6 +84,7 @@ jobs:
         export ALLOWED_HOSTS=localhost
         export GITHUB_WORKFLOW=True
         export MODE=workflow
+        pipenv shell
         python manage.py makemigrations
         python manage.py migrate
         python manage.py migrate --run-syncdb
