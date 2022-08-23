@@ -60,6 +60,7 @@ jobs:
     - name: Install dependencies
       run: |
         pipenv install
+        pipenv shell
     - name: Lint with flake8
       run: |
         pipenv install flake8
@@ -84,7 +85,6 @@ jobs:
         export ALLOWED_HOSTS=localhost
         export GITHUB_WORKFLOW=True
         export MODE=workflow
-        pipenv shell
         python manage.py makemigrations
         python manage.py migrate
         python manage.py migrate --run-syncdb
