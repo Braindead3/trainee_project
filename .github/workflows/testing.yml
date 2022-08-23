@@ -59,10 +59,10 @@ jobs:
         pip install pipenv
     - name: Install dependencies
       run: |
-        pipenv install --deploy --dev
+        pipenv install --system --deploy --dev
     - name: Lint with flake8
       run: |
-        pipenv install flake8 --deploy --dev
+        pipenv install flake8 --system --deploy --dev
         flake8
     - name: Setup test database
       env:
