@@ -62,7 +62,7 @@ jobs:
         pipenv install --system --deploy --dev
     - name: Lint with flake8
       run: |
-        pipenv install flake8 --system --deploy --dev
+        pipenv install flake8 --deploy --dev
         flake8
     - name: Setup test database
       env:
