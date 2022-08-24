@@ -39,7 +39,7 @@ jobs:
           POSTGRES_USER: ${{ matrix.database-user }}
           POSTGRES_PASSWORD: ${{ matrix.database-password }}
         ports:
-          - 5433:5433
+          - 5432:5433
         # Set health checks to wait until postgres has started
         options:
           --health-cmd pg_isready
