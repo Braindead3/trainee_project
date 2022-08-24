@@ -29,7 +29,7 @@ jobs:
         database-host:
           - 127.0.0.1
         database-port:
-          - 5432
+          - 5433
 
     services:
       postgres:
@@ -62,7 +62,6 @@ jobs:
         pipenv install --system --deploy --dev
     - name: Lint with flake8
       run: |
-        pipenv install flake8 --deploy --dev --ignore-pipfile
         flake8
     - name: Run migrations
       run: |
