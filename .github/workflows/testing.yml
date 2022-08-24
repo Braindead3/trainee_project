@@ -21,7 +21,7 @@ jobs:
       matrix:
         python-version: [3.10.6]
         database-name:
-          - django_actions
+            - django_actions
         database-password:
           - postgres
         database-user:
@@ -62,14 +62,14 @@ jobs:
         pipenv install --system --deploy --dev
     - name: Lint with flake8
       run: |
-        pipenv install flake8 --deploy --dev
+        pipenv install flake8 --deploy
         flake8
     - name: Run migrations
       run: |
         python manage.py migrate
     - name: Run tests
       run: |
-          pipenv install pytest --deploy --dev
+          pipenv install pytest --deploy --ignore-pipfile
           pytest
     - uses: actions/checkout@v2.4.0
     - name: Build the images and start the containers
