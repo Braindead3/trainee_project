@@ -69,7 +69,8 @@ jobs:
         python manage.py migrate
     - name: Run tests
       run: |
-          pipenv install pytest --deploy --dev --ignore-pipfile
+          pipenv lock
+          pipenv install pytest-django --deploy --dev --ignore-pipfile
           pytest
     - uses: actions/checkout@v2.4.0
     - name: Build the images and start the containers
